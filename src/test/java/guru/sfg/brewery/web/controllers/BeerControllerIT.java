@@ -13,6 +13,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class BeerControllerIT extends BaseIT {
 
     @Test
+    void createBeer() throws Exception {
+        mockMvc.perform(get("/beers/new").with(httpBasic("user", "pass")))
+                .andExpect(status().isOk())
+                .andExpect(view().name("beers/createBeer"))
+                .andExpect(model().attributeExists("beer"));
+    }
+
+    @Test
     void findBeers() throws Exception {
         mockMvc.perform(get("/beers/find"))
                 .andExpect(status().isOk())
