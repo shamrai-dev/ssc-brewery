@@ -19,17 +19,15 @@ public class UserDataLoader implements CommandLineRunner {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    @Override
-    public void run(String... args) throws Exception {
-
-        Authority adminRole = authorityRepository.save(Authority.builder().role("ADMIN").build());
+    private void loadSecurityData() {
+        Authority admin = authorityRepository.save(Authority.builder().role("ADMIN").build());
         Authority userRole = authorityRepository.save(Authority.builder().role("USER").build());
-        Authority customerRole = authorityRepository.save(Authority.builder().role("CUSTOMER").build());
+        Authority customer = authorityRepository.save(Authority.builder().role("CUSTOMER").build());
 
         userRepository.save(User.builder()
-                .username("admin")
-                .password(passwordEncoder.encode("password"))
-                .authority(adminRole)
+                .username("spring")
+                .password(passwordEncoder.encode("guru"))
+                .authority(admin)
                 .build());
 
         userRepository.save(User.builder()
@@ -41,10 +39,18 @@ public class UserDataLoader implements CommandLineRunner {
         userRepository.save(User.builder()
                 .username("scott")
                 .password(passwordEncoder.encode("tiger"))
-                .authority(customerRole)
+                .authority(customer)
                 .build());
 
-        log.debug("Users loaded: " + userRepository.count());
-
+        log.debug("Users Loaded: " + userRepository.count());
     }
+
+    @Override
+    public void run(String... args) throws Exception {
+        if (authorityRepository.count() == 0) {
+            loadSecurityData();
+        }
+    }
+
+
 }
