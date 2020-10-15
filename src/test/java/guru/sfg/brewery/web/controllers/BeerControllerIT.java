@@ -13,8 +13,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class BeerControllerIT extends BaseIT {
 
     @Test
-    void createBeer() throws Exception {
-        mockMvc.perform(get("/beers/new").with(httpBasic("user", "pass")))
+    void createBeerForAdmin() throws Exception {
+        mockMvc.perform(get("/beers/new").with(httpBasic("admin", "password")))
+                .andExpect(status().isOk())
+                .andExpect(view().name("beers/createBeer"))
+                .andExpect(model().attributeExists("beer"));
+    }
+
+    @Test
+    void createBeerForUser() throws Exception {
+        mockMvc.perform(get("/beers/new").with(httpBasic("user", "password")))
                 .andExpect(status().isOk())
                 .andExpect(view().name("beers/createBeer"))
                 .andExpect(model().attributeExists("beer"));
