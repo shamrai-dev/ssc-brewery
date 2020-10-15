@@ -44,4 +44,34 @@ public class BeerRestControllerIT extends BaseIT {
                 .header("Api-Secret", "passwordXYZ"))
                 .andExpect(status().isUnauthorized());
     }
+
+    @Test
+    void deleteBeerUrlAuth() throws Exception {
+        mockMvc.perform(delete("/api/v1/beer/9844dc79-9ea0-4290-b6d8-fca419da6d3e")
+                .param("user", "user")
+                .param("pass", "password"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void deleteBeerUrlAuthAnonymous() throws Exception {
+        mockMvc.perform(delete("/api/v1/beer/9844dc79-9ea0-4290-b6d8-fca419da6d3e")
+                .param("pass", "password"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void deleteBeerUrlAuthAnonymous2() throws Exception {
+        mockMvc.perform(delete("/api/v1/beer/9844dc79-9ea0-4290-b6d8-fca419da6d3e")
+                .param("user", "user"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void deleteBeerUrlAuthBadCreds() throws Exception {
+        mockMvc.perform(delete("/api/v1/beer/9844dc79-9ea0-4290-b6d8-fca419da6d3e")
+                .param("user", "user")
+                .param("pass", "passwordXYZ"))
+                .andExpect(status().isUnauthorized());
+    }
 }
