@@ -21,8 +21,7 @@ public class SfgPasswordEncoderFactories {
         return new DelegatingPasswordEncoder(encodingId, encoders);
     }
 
-    //Do not instantiate class
+    //don't instantiate class
     private SfgPasswordEncoderFactories() {
-
     }
 }

@@ -5,6 +5,9 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * Created by jt on 6/19/20.
+ */
 @Slf4j
 public class RestHeaderAuthFilter extends AbstractRestAuthFilter {
 
@@ -12,13 +15,11 @@ public class RestHeaderAuthFilter extends AbstractRestAuthFilter {
         super(requiresAuthenticationRequestMatcher);
     }
 
-    @Override
-    protected String getUserName(HttpServletRequest request) {
-        return request.getHeader("Api-Key");
-    }
-
-    @Override
     protected String getPassword(HttpServletRequest request) {
         return request.getHeader("Api-Secret");
+    }
+
+    protected String getUsername(HttpServletRequest request) {
+        return request.getHeader("Api-Key");
     }
 }

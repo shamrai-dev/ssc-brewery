@@ -10,6 +10,9 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+/**
+ * Created by jt on 6/21/20.
+ */
 @Slf4j
 @RequiredArgsConstructor
 @Component

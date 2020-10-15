@@ -18,6 +18,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * Created by jt on 6/20/20.
+ */
 @Slf4j
 public abstract class AbstractRestAuthFilter extends AbstractAuthenticationProcessingFilter {
 
@@ -40,14 +43,14 @@ public abstract class AbstractRestAuthFilter extends AbstractAuthenticationProce
         try {
             Authentication authResult = attemptAuthentication(request, response);
 
-            if(authResult != null) {
+            if (authResult != null) {
                 successfulAuthentication(request, response, chain, authResult);
             } else {
                 chain.doFilter(request, response);
             }
-        } catch (AuthenticationException ae) {
-            log.error("Authentication Failed", ae);
-            unsuccessfulAuthentication(request, response, ae);
+        } catch (AuthenticationException e) {
+            log.error("Authentication Failed", e);
+            unsuccessfulAuthentication(request, response, e);
         }
     }
 
@@ -55,6 +58,7 @@ public abstract class AbstractRestAuthFilter extends AbstractAuthenticationProce
     protected void unsuccessfulAuthentication(HttpServletRequest request,
                                               HttpServletResponse response, AuthenticationException failed)
             throws IOException, ServletException {
+
         SecurityContextHolder.clearContext();
 
         if (log.isDebugEnabled()) {
@@ -68,18 +72,21 @@ public abstract class AbstractRestAuthFilter extends AbstractAuthenticationProce
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
-        String userName = getUserName(request);
+        String userName = getUsername(request);
         String password = getPassword(request);
 
-        if(userName == null) {
+        if (userName == null) {
             userName = "";
         }
-        if(password == null) {
+
+        if (password == null) {
             password = "";
         }
 
         log.debug("Authenticating User: " + userName);
+
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(userName, password);
+
         if (!StringUtils.isEmpty(userName)) {
             return this.getAuthenticationManager().authenticate(token);
         } else {
@@ -92,16 +99,17 @@ public abstract class AbstractRestAuthFilter extends AbstractAuthenticationProce
                                             HttpServletResponse response, FilterChain chain, Authentication authResult)
             throws IOException, ServletException {
 
-        if (log.isDebugEnabled()) {
-            log.debug("Authentication success. Updating SecurityContextHolder to contain: "
+        if (logger.isDebugEnabled()) {
+            logger.debug("Authentication success. Updating SecurityContextHolder to contain: "
                     + authResult);
         }
+
         SecurityContextHolder.getContext().setAuthentication(authResult);
+
     }
 
-
-
-    protected abstract String getUserName(HttpServletRequest request);
     protected abstract String getPassword(HttpServletRequest request);
+
+    protected abstract String getUsername(HttpServletRequest request);
 
 }
